@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title style="display: none">Flower Classification</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="rosa.png" />
+  </head>
+
+  <body>
+    <header>
+      <div class="title text">
+        <h1 class="title__content">
+          Flower Classification - Supervisioned Learning
+        </h1>
+      </div>
+    </header>
+
+    <div class="fields">
+      <div class="image-field-upload text">
+        <label for="file-upload">Upload Image</label>
+        <input
+          type="file"
+          id="file-upload"
+          accept="image/*"
+          onchange="handleUpload()"
+        />
+      </div>
+      <div class="image-field-url text">
+        <label for="image-url">Image URL:</label>
+        <input type="text" id="image-url" />
+        <button type="button" onclick="predictFromUrl()">Predict</button>
+      </div>
+    </div>
+
+    <div class="image-container">
+      <img id="uploaded-image" src="" />
+    </div>
+
+    <div id="label-container" class="classifications"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script type="text/javascript">
+      const URL = "./my_model/";
+      let model, labelContainer, maxPredictions;
+
+      async function init() {
+        const modelURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
+
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+
+        labelContainer = document.getElementById("label-container");
+        for (let i = 0; i < maxPredictions; i++) {
+          labelContainer.appendChild(document.createElement("div"));
+        }
+      }
+
+      async function predict(image) {
+        const prediction = await model.predict(image);
+        for (let i = 0; i < maxPredictions; i++) {
+          const classPrediction =
+            prediction[i].className +
+            ": " +
+            prediction[i].probability.toFixed(2) * 100 +
+            "%";
+          labelContainer.childNodes[i].innerHTML = classPrediction;
+        }
+      }
+
+      function handleUpload() {
+        const fileUpload = document.getElementById("file-upload");
+        const file = fileUpload.files[0];
+        const reader = new FileReader();
+        reader.onload = async function (event) {
+          const image = new Image();
+          image.src = event.target.result;
+          image.onload = function () {
+            predict(image);
+            const uploadedImage = document.getElementById("uploaded-image");
+            uploadedImage.src = image.src;
+          };
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function predictFromUrl() {
+        const imageUrl = document.getElementById("image-url").value;
+        const corsUrl = "https://cors-anywhere.herokuapp.com/";
+        const urlPattern =
+          /^((http|https|ftp):\/\/)?([a-zA-Z0-9-_.]+\.+[a-zA-Z]{2,3})(\/[a-zA-Z0-9-_.]+)*\/?.*/;
+
+        if (urlPattern.test(imageUrl)) {
+          const image = new Image();
+          image.crossOrigin = "Anonymous";
+          image.src = corsUrl + imageUrl;
+          image.onload = function () {
+            predict(image);
+            const uploadedImage = document.getElementById("uploaded-image");
+            uploadedImage.src = image.src;
+          };
+        } else {
+          alert("Invalid image URL");
+        }
+      }
+
+      init();
+    </script>
+  </body>
+</html>
