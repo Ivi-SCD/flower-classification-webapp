@@ -15,8 +15,8 @@
 }
 
 body {
-  background-color: rgb(66, 66, 66);
-  color: rgb(66, 66, 66);
+  background-color: rgb(12, 12, 12);
+  color: rgb(12, 12, 12);
   font-family: var(--font-default);
 }
 
@@ -109,7 +109,7 @@ label {
 }
 
 #label-container {
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   gap: 10px;
@@ -119,6 +119,7 @@ label {
 .classifications div {
   display: flex;
   align-items: center;
+  font-weight: var(--pesado);
   justify-content: space-between;
   width: 200px;
   background-color: #f5f5f5;
@@ -149,7 +150,7 @@ label {
 .image-container {
   padding: 10px;
   margin-top: 20px;
-  display: flex;
+  display: none; 
   justify-content: center;
 }
 
@@ -160,4 +161,47 @@ label {
   max-width: 400px;
   max-height: 400px;
   object-fit: contain;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+}
+
+.footer_owner span{
+  gap: 0.25em;
+  display: flex;
+  flex-direction: row;
+}
+
+.footer_group {
+  padding-right: 2.5em;
+}
+
+@media screen and (max-width: 750px) {
+  * {
+    overflow: auto;
+  }
+
+  .title__content {
+    font-size: 20px;
+  }
+
+ .fields {
+  flex-direction: column;
+  gap: 1em;
+ }
+
+ .image-field-url button {
+  width: 75%;
+  padding: 1em;
+ }
 }

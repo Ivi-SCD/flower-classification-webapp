@@ -18,28 +18,45 @@
       </div>
     </header>
 
-    <div class="fields">
-      <div class="image-field-upload text">
-        <label for="file-upload">Upload Image</label>
-        <input
-          type="file"
-          id="file-upload"
-          accept="image/*"
-          onchange="handleUpload()"
-        />
+    <main>
+      <div class="fields">
+        <div class="image-field-upload text">
+          <label for="file-upload">Upload Image</label>
+          <input
+            type="file"
+            id="file-upload"
+            accept="image/*"
+            onchange="handleUpload()"
+          />
+        </div>
+        <div class="image-field-url text">
+          <label for="image-url">Image URL:</label>
+          <input type="text" id="image-url" />
+          <button type="button" onclick="predictFromUrl()">Predict</button>
+        </div>
       </div>
-      <div class="image-field-url text">
-        <label for="image-url">Image URL:</label>
-        <input type="text" id="image-url" />
-        <button type="button" onclick="predictFromUrl()">Predict</button>
+  
+      <div class="image-container">
+        <img id="uploaded-image" src="" />
       </div>
-    </div>
-
-    <div class="image-container">
-      <img id="uploaded-image" src="" />
-    </div>
-
+    </main>
+   
     <div id="label-container" class="classifications"></div>
+   
+    <footer>
+      <div class="footer_owner">
+        <span>All Copyright Reserverd to <a href="https://www.github.com/Ivi-SCD" style="color:inherit" target="_blank">Ivi-SCD </a></span>
+      </div>
+      <div class="footer_group">
+        <ul>
+          Group: 
+          <li>Ivisson Pereira Do Nascimento Alves</li>
+          <li>Maria Clara Batista Dos Santos</li>
+          <li>Pedro Augusto Veiga Pessoa de Araújo</li>
+        </ul>
+      </div>
+     
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
     <script type="text/javascript">
@@ -59,6 +76,17 @@
         }
       }
 
+      function showResults() {
+        const uploadedImage = document.getElementsByClassName("image-container")[0];
+        const labelContainer = document.getElementById("label-container");
+            
+        if (uploadedImage.children.length > 0 && labelContainer.innerHTML.trim() !== "") {
+          uploadedImage.style.display = "flex";
+          labelContainer.style.display = "flex";
+        }
+      }
+
+
       async function predict(image) {
         const prediction = await model.predict(image);
         for (let i = 0; i < maxPredictions; i++) {
@@ -69,6 +97,8 @@
             "%";
           labelContainer.childNodes[i].innerHTML = classPrediction;
         }
+
+        showResults();
       }
 
       function handleUpload() {
