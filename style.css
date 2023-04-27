@@ -201,7 +201,20 @@ footer {
  }
 
  .image-field-url button {
-  width: 75%;
+  width: 95%;
   padding: 1em;
  }
+
+ footer {
+  font-size: 12px
+ }
+
+ label {
+  font-size: 15px
+ }
+
+ .image-field-upload input[type="file"], .image-field-url input[type="text"] {
+  font-size: 14px;
+  width: 90%;
+}
 }

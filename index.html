@@ -7,6 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <link rel="shortcut icon" href="rosa.png" />
+    <style>
+      .loading-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 5px solid #000000;
+        border-top-color: rgb(255, 255, 255);
+        animation: loading-circle 1s linear infinite;
+      }
+      
+      @keyframes loading-circle {
+        to { transform: rotate(360deg); }
+      }
+      </style>      
   </head>
 
   <body>
@@ -66,8 +80,14 @@
       async function init() {
         const modelURL = URL + "model.json";
         const metadataURL = URL + "metadata.json";
+        
+        const loadingCircle = document.createElement("div");
+        loadingCircle.classList.add("loading-circle");
+        document.body.appendChild(loadingCircle); 
 
         model = await tmImage.load(modelURL, metadataURL);
+
+        loadingCircle.remove();
         maxPredictions = model.getTotalClasses();
 
         labelContainer = document.getElementById("label-container");
