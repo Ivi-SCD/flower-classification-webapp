@@ -6,21 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
-    <link rel="shortcut icon" href="rosa.png" />
-    <style>
-      .loading-circle {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border: 5px solid #000000;
-        border-top-color: rgb(255, 255, 255);
-        animation: loading-circle 1s linear infinite;
-      }
-      
-      @keyframes loading-circle {
-        to { transform: rotate(360deg); }
-      }
-      </style>      
+    <link rel="shortcut icon" href="rosa.png" />    
   </head>
 
   <body>
@@ -51,12 +37,12 @@
       </div>
   
       <div class="image-container">
-        <img id="uploaded-image" src="" />
+        <img id="uploaded-image" src=""/>
       </div>
+
+      <div id="label-container" class="classifications"></div>
     </main>
-   
-    <div id="label-container" class="classifications"></div>
-   
+  
     <footer>
       <div class="footer_owner">
         <span>All Copyright Reserverd to <a href="https://www.github.com/Ivi-SCD" style="color:inherit" target="_blank">Ivi-SCD </a></span>
@@ -71,93 +57,8 @@
       </div>
      
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
-    <script type="text/javascript">
-      const URL = "./my_model/";
-      let model, labelContainer, maxPredictions;
-
-      async function init() {
-        const modelURL = URL + "model.json";
-        const metadataURL = URL + "metadata.json";
-        
-        const loadingCircle = document.createElement("div");
-        loadingCircle.classList.add("loading-circle");
-        document.body.appendChild(loadingCircle); 
-
-        model = await tmImage.load(modelURL, metadataURL);
-
-        loadingCircle.remove();
-        maxPredictions = model.getTotalClasses();
-
-        labelContainer = document.getElementById("label-container");
-        for (let i = 0; i < maxPredictions; i++) {
-          labelContainer.appendChild(document.createElement("div"));
-        }
-      }
-
-      function showResults() {
-        const uploadedImage = document.getElementsByClassName("image-container")[0];
-        const labelContainer = document.getElementById("label-container");
-            
-        if (uploadedImage.children.length > 0 && labelContainer.innerHTML.trim() !== "") {
-          uploadedImage.style.display = "flex";
-          labelContainer.style.display = "flex";
-        }
-      }
-
-
-      async function predict(image) {
-        const prediction = await model.predict(image);
-        for (let i = 0; i < maxPredictions; i++) {
-          const classPrediction =
-            prediction[i].className +
-            ": " +
-            prediction[i].probability.toFixed(2) * 100 +
-            "%";
-          labelContainer.childNodes[i].innerHTML = classPrediction;
-        }
-
-        showResults();
-      }
-
-      function handleUpload() {
-        const fileUpload = document.getElementById("file-upload");
-        const file = fileUpload.files[0];
-        const reader = new FileReader();
-        reader.onload = async function (event) {
-          const image = new Image();
-          image.src = event.target.result;
-          image.onload = function () {
-            predict(image);
-            const uploadedImage = document.getElementById("uploaded-image");
-            uploadedImage.src = image.src;
-          };
-        };
-        reader.readAsDataURL(file);
-      }
-
-      function predictFromUrl() {
-        const imageUrl = document.getElementById("image-url").value;
-        const corsUrl = "https://cors-anywhere.herokuapp.com/";
-        const urlPattern =
-          /^((http|https|ftp):\/\/)?([a-zA-Z0-9-_.]+\.+[a-zA-Z]{2,3})(\/[a-zA-Z0-9-_.]+)*\/?.*/;
-
-        if (urlPattern.test(imageUrl)) {
-          const image = new Image();
-          image.crossOrigin = "Anonymous";
-          image.src = corsUrl + imageUrl;
-          image.onload = function () {
-            predict(image);
-            const uploadedImage = document.getElementById("uploaded-image");
-            uploadedImage.src = image.src;
-          };
-        } else {
-          alert("Invalid image URL");
-        }
-      }
-
-      init();
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js" style="display:none"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js" style="display:none"></script>
+    <script src="main.js" style="display:none"></script>
   </body>
 </html>

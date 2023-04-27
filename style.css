@@ -53,7 +53,7 @@ label {
 
 .image-field-upload input[type="file"],
 .image-field-url input[type="text"] {
-  font-size: 18px;
+  font-size: 15px;
   padding: 10px;
   border: 2px solid #ddd;
   border-radius: 5px;
